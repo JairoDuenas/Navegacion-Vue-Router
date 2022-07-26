@@ -5,7 +5,9 @@
         <router-link :to="`/chats/${chat.id}`">{{ chat.name }}</router-link>
       </div>
     </aside>
-    <article>{{ this.$route.params.chatId }}</article>
+    <article>
+      <router-view />
+    </article>
   </div>
 </template>
 
