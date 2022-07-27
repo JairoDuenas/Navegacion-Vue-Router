@@ -5,7 +5,13 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     //{ path: "/home", redirect: { name: "home" } },
-    { path: "/", name: "home", component: HomeView, alias: ["/home"] },
+    {
+      path: "/",
+      name: "home",
+      component: HomeView,
+      alias: ["/home"],
+      meta: { requiresAuth: false },
+    },
     {
       path: "/session",
       component: () => import("../views/SessionView.vue"),
@@ -27,6 +33,7 @@ const router = createRouter({
     {
       path: "/chats",
       component: () => import("../views/ChatsView.vue"),
+      meta: { requiresAuth: true, roles: ["admin"] },
       children: [
         {
           path: ":chatId",
@@ -44,6 +51,12 @@ const router = createRouter({
 
 router.beforeEach((to, from) => {
   console.log(to, from);
+
+  if (to.meta?.requiresAuth && to.meta.roles.includes("admin")) {
+    console.log(to.path, "requiresAuth");
+    return "session";
+  }
+
   if (to.path === "/") return { name: "about" };
   return true;
 });
